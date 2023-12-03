@@ -1,0 +1,92 @@
+[
+    {
+        "name": "pwr",
+        "unit": "W",
+        "desc": "The power drawn in watts."
+    },
+    {
+        "name": "gtemp",
+        "unit": "C",
+        "desc": "GPU temperature in celsius."
+    },
+    {
+        "name": "mtemp",
+        "unit": "C",
+        "desc": "Memory temperature in celsius."
+    },
+    {
+        "name": "sm",
+        "unit": "%",
+        "desc": "Utilization of SM, percent of time over the past sample period during which one or more kernels was executing on the GPU."
+    },
+    {
+        "name": "mem",
+        "unit": "%",
+        "desc": "Utilization of memory, percent of time over the past sample period during which global (device) memory was being read or written."
+    },
+    {
+        "name": "enc",
+        "unit": "%",
+        "desc": "Utilization of GPU video encoder, percent of time over the past sample period during which GPU video encoder was being used"
+    },
+    {
+        "name": "dec",
+        "unit": "%",
+        "desc": "Utilization of GPU video decoder, percent of time over the past sample period during which GPU video decoder was being used"
+    },
+    {
+        "name": "mclk",
+        "unit": "MHz",
+        "desc": "Current frequency of memory clock in megahertz"
+    },
+    {
+        "name": "pclk",
+        "unit": "MHz",
+        "desc": "Current frequency of SM in megahertz"
+    },
+    {
+        "name": "pviol",
+        "unit": "%",
+        "desc": "Power violation, percent of time over the past sample period during which power went over the allowed maximum"
+    },
+    {
+        "name": "tviol",
+        "unit": "%",
+        "desc": "Thermal violation, percent of time over the past sample period during which temperature went over the allowed maximum"
+    },
+    {
+        "name": "fb",
+        "unit": "MB",
+        "desc": "Usage of frame buffer memory (global/device memory) in megabytes."
+    },
+    {
+        "name": "bar1",
+        "unit": "MB",
+        "desc": "Usage of BAR1 memory in megabytes. BAR1 is used to map the FB so that it can be directly accessed by the CPU or by 3rd party devices (peer-to-peer on the PCIe bus)."
+    },
+    {
+        "name": "sbecc",
+        "unit": "count",
+        "desc": "Number of single bit ECC errors. Single bit ECC error can be auto-corrected."
+    },
+    {
+        "name": "dbecc",
+        "unit": "Count",
+        "desc": "Number of double bit ECC errors. Double bit ECC error cannot be auto-corrected."
+    },
+    {
+        "name": "pic",
+        "unit": "Count",
+        "desc": "Number of PCIe replay errors."
+    },
+    {
+        "name": "rxpci",
+        "unit": "MB/s",
+        "desc": "The GPU-centric receive throughput across the PCIe bus in MB/s over the past sample period."
+    },
+    {
+        "name": "txpci",
+        "unit": "MB/s",
+        "desc": "The GPU-centric transmission throughput across the PCIe bus in MB/s over the past sample period."
+    }
+]
