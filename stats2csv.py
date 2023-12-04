@@ -2,7 +2,10 @@ import argparse
 import json
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List
+from typing import List, Mapping
+
+import numpy as np
+import pandas as pd
 
 
 def str2time(time_str: str) -> datetime.time:
@@ -15,7 +18,7 @@ def str2date(date_str: str) -> datetime.date:
     return _date
 
 
-def str2datetime(date_str: str, time_str: str) -> datetime.datetime:
+def str2datetime(date_str: str, time_str: str) -> datetime:
     _time = str2time(time_str)
     _date = str2date(date_str)
     _datetime = datetime.combine(date=_date, time=_time)
@@ -41,7 +44,7 @@ def read_lines(filepath: str) -> List[str]:
     return lines
 
 
-def extract_metric_lines(filepath: str) -> str:
+def extract_metric_line(filepath: str) -> str:
     lines = read_lines(filepath)
 
     for idx in range(len(lines) - 1):
@@ -75,49 +78,51 @@ class DataPointWithDateTime(DataPoint):
     time: datetime.time
 
 
-def extract_metrics(filepath:str) -> List[DataPoint]:
-    lines = read_lines(filepath)
-    metrics = []
-    # for line in lines:
-
-
-def extract_metrics_with_time(filepath:str) -> List[DataPointWithTime]:
-    pass
-
-def extract_metrics_with_date(filepath: str) -> List[DataPointWithDate]:
-    pass
-
-def extract_metrics_with_datetime(filepath:str) -> List[DataPointWithDateTime]:
-    pass
-
-
-def get_all_metrics(metric_line: str, file_path: str) -> List[DataPoint]:
+def get_all_metrics(metric_line: str, file_path: str) -> Mapping[str, List[DataPoint]]:
     metric_str_list = metric_line.split()
     first_elem = metric_str_list[0]
     second_elem = metric_str_list[1]
 
     lines = read_lines(file_path)
-    datapoints = []
+    datapoints = dict()
 
     if first_elem == "#" and second_elem == "gpu":
-        # "# gpu ..."
-        metrics = metric_str_list[2:]
+        # see docs/example_dmon.txt for an example
+        metrics = metric_str_list[1:]
+        datapoints = {m: [] for m in metrics}
+        for line in lines:
+            if line[0] == "#":
+                continue
+            else:
+                data = line.split()
+                for m, d in zip(metrics, data):
+                    if d == "-":
+                        datapoints[m].append(np.nan)
+                    else:
+                        datapoints[m].append(int(d))
 
     elif first_elem == "#Time" and second_elem == "gpu":
-        # "#Time        gpu ..."
+        # see docs/example_dmon_time.txt for an example
         metrics = metric_str_list[2:]
+
     elif first_elem == "#Date" and second_elem == "gpu":
-        # "#Date       gpu ..."
+        # see docs/example_dmon_date.txt for an example
         metrics = metric_str_list[2:]
     elif first_elem == "#Date" and second_elem == "Time":
-        # "#Date       Time        gpu ..."
+        # see docs/example_dmon_datetime.txt for an example
         metrics = metric_str_list[3:]
     else:
-        metrics = []
+        pass
 
-
+    return datapoints
 
 
 if __name__ == "__main__":
     _METRICS_JSON = "./metrics.json"
-    metrics_dict = load_json(_METRICS_JSON)
+    # metrics_dict = load_json(_METRICS_JSON)
+
+    args = get_args()
+    metric_line = extract_metric_line(args.dmon_output)
+    stats_dict = get_all_metrics(metric_line=metric_line, file_path=args.dmon_output)
+
+    df = pd.DataFrame(data=stats_dict, dtype=pd.Int64Dtype())
